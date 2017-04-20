@@ -29,7 +29,67 @@ var app = {
     onDeviceReady: function() {
         this.receivedEvent('deviceready');
         document.getElementById('timestamp').innerHTML = new Date();
-        document.getElementById('platform').innerHTML = device.platform;
+        
+        var elements = document.getElementById('platform');
+
+        elements.innerHTML ='<ul data-role="listview" id="list">'
+            +'<li>Name:' + device.name + '</li>'
+            +'<li>Name:' + device.model + '</li>'
+            +'<li>Name:' + device.cordova + '</li>'
+            +'<li>Name:' + device.platform + '</li>'
+            +'<li>Name:' + device.uuid + '</li>'
+            +'<li>Name:' + device.version + '</li>'
+            + '</ul>';
+
+function checkConnection() {
+    var networkState = navigator.connection.type;
+
+    var states = {};
+    states[Connection.UNKNOWN]  = 'Unknown connection';
+    states[Connection.ETHERNET] = 'Ethernet connection';
+    states[Connection.WIFI]     = 'WiFi connection';
+    states[Connection.CELL_2G]  = 'Cell 2G connection';
+    states[Connection.CELL_3G]  = 'Cell 3G connection';
+    states[Connection.CELL_4G]  = 'Cell 4G connection';
+    states[Connection.CELL]     = 'Cell generic connection';
+    states[Connection.NONE]     = 'No network connection';
+
+    alert('Connection type: ' + states[networkState]);
+}
+
+checkConnection();
+function onSuccess(contact) {
+    alert("Save Success");
+};
+
+function onError(contactError) {
+    alert("Error = " + contactError.code);
+};
+
+// create a new contact object
+var contact = navigator.contacts.create();
+contact.displayName = "Plumber";
+contact.nickname = "Plumber";            // specify both to support all devices
+
+// populate some fields
+var name = new ContactName();
+name.givenName = "Lilian";
+name.familyName = "Tourbillon";
+contact.name = name;
+
+// save to device
+contact.save(onSuccess,onError);
+
+
+var oldLaunch = window.localStorage.getItem("newLaunch");
+        document.getElementById('olddate').innerHTML = "OLD DATE : " + oldLaunch;
+        window.localStorage.clear();
+
+        var newLaunch = new Date();
+        window.localStorage.setItem("newLaunch", newLaunch);
+        var newLaunchItem = window.localStorage.getItem("newLaunch");
+        document.getElementById('date').innerHTML = "NEW DATE : " + newLaunchItem;
+
     },
 
     // Update DOM on a Received Event
